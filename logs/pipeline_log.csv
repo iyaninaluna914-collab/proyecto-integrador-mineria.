@@ -1,0 +1,3 @@
+Paso,Descripción,Filas,Nulos,Retención (%)
+1,Eliminación de 126 registros duplicados identificados en la inspección inicial,8034,753,98.46
+2,"Tratamiento de nulos: imputación de mediana en tiempo, 'Unknown' en género y eliminación en fechas",7714,0,94.53
