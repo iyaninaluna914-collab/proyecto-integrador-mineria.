@@ -26,4 +26,4 @@ st.markdown(
     """
 )
 
-st.success("🎉 ¡Estructura de la aplicación completada con éxito para la entrega del grupo!")
+#st.success("🎉 ¡Estructura de la aplicación completada con éxito para la entrega del grupo!")#
