@@ -18,33 +18,18 @@ try:
     # ==========================================
     # 1. LIMPIEZA DE DATOS (Para unificar las categorías)
     # ==========================================
-    # Pasamos a minúsculas y quitamos espacios para agrupar registros repetidos
     df['favorite_genre'] = df['favorite_genre'].astype(str).str.lower().str.strip()
 
-    # Diccionario definitivo para unificar idiomas, mayúsculas y abreviaciones en español
     mapeo_generos = {
-        'sci-fi': 'Ciencia Ficción',
-        'ciencia ficción': 'Ciencia Ficción',
-        'action': 'Acción',
-        'acción': 'Acción',
-        'accion': 'Acción',
-        'comedy': 'Comedia',
-        'comedia': 'Comedia',
-        'drama': 'Drama',
-        'horror': 'Terror',
-        'terror': 'Terror',
-        'romance': 'Romance',
-        'thriller': 'Suspenso',
-        'suspenso': 'Suspenso',
-        'documentary': 'Documental',
-        'documental': 'Documental',
-        'doc': 'Documental',
-        'crime': 'Crimen',
-        'crimen': 'Crimen',
-        'unknown': 'Desconocido'
+        'sci-fi': 'Ciencia Ficción', 'ciencia ficción': 'Ciencia Ficción',
+        'action': 'Acción', 'acción': 'Acción', 'accion': 'Acción',
+        'comedy': 'Comedia', 'comedia': 'Comedia', 'drama': 'Drama',
+        'horror': 'Terror', 'terror': 'Terror', 'romance': 'Romance',
+        'thriller': 'Suspenso', 'suspenso': 'Suspenso',
+        'documentary': 'Documental', 'documental': 'Documental', 'doc': 'Documental',
+        'crime': 'Crimen', 'crimen': 'Crimen', 'unknown': 'Desconocido'
     }
 
-    # Aplicamos el reemplazo en el DataFrame
     df['favorite_genre'] = df['favorite_genre'].replace(mapeo_generos)
 
 
@@ -70,6 +55,14 @@ try:
     plt.xlabel('Cantidad de Usuarios')
     plt.ylabel('Género Favorito')
     st.pyplot(fig1)
+    
+    # EXPLICACIÓN DEL GRÁFICO 1
+    st.markdown("""
+    **💡 Análisis de Distribución:**
+    * Este gráfico de barras permite identificar cuáles son las preferencias temáticas principales de nuestra base de usuarios analizada.
+    * Al ordenar las categorías de mayor a menor, observamos de forma directa cuáles son los géneros que concentran la mayor masa de clientes (volumen) y cuáles tienen menor impacto comercial o de engagement en la plataforma de streaming.
+    """)
+    st.markdown("---")
 
 
     # ==========================================
@@ -93,6 +86,15 @@ try:
     plt.xlabel('Minutos Mensuales')
     plt.ylabel('Género')
     st.pyplot(fig2)
+    
+    # EXPLICACIÓN DEL GRÁFICO 2
+    st.markdown("""
+    **💡 Análisis del Consumo Mensual (Dispersión y Tendencia Central):**
+    * El diagrama de caja (Boxplot) nos ayuda a entender el comportamiento de consumo (en minutos) sin que los promedios nos engañen.
+    * **Línea central (Mediana):** Indica el punto medio del consumo de los usuarios para cada género. Nos permite comparar qué comunidades pasan más tiempo real frente a la pantalla.
+    * **Ancho de la caja (Rango Intercuartílico):** Muestra la variabilidad o dispersión del consumo. Una caja más larga significa que los gustos y tiempos de esos usuarios son muy variados, mientras que una caja corta refleja un comportamiento de consumo más uniforme y predecible.
+    """)
+    st.markdown("---")
 
 
     # ==========================================
@@ -100,18 +102,15 @@ try:
     # ==========================================
     st.subheader("Análisis Multivariado de Perfil de Usuario")
 
-    # Filtramos los 3 géneros más comunes para evitar sobrecargar el gráfico
     top_genres = df['favorite_genre'].value_counts().nlargest(3).index
     df_filtered = df[df['favorite_genre'].isin(top_genres)]
 
-    # Seleccionamos variables de interés reales (excluyendo user_id)
     variables_interes = ['age', 'monthly_watch_time_mins'] 
     num_vars = [col for col in variables_interes if col in df_filtered.columns]
 
     if len(num_vars) >= 2:
         g = sns.pairplot(data=df_filtered, vars=num_vars, hue='favorite_genre', palette='Dark2')
         
-        # Traducimos los ejes del Pairplot automáticamente a español
         labels_espanol = {'age': 'Edad', 'monthly_watch_time_mins': 'Minutos Mensuales'}
         for ax in g.axes.flat:
             if ax is not None:
@@ -122,6 +121,14 @@ try:
                     
         plt.suptitle('Análisis Multivariado de Perfil de Usuario por Género Top', y=1.02)
         st.pyplot(g.fig)
+        
+        # EXPLICACIÓN DEL GRÁFICO 3
+        st.markdown("""
+        **💡 Análisis Cruzado de Perfil de Usuario:**
+        * Este análisis multivariado cruza las variables demográficas y de consumo (**Edad** vs. **Minutos Mensuales**) segmentando el comportamiento por los **3 géneros más populares**.
+        * **Gráficos diagonales (Densidad):** Muestran cómo se distribuye la edad o el tiempo de forma independiente para cada uno de los tres géneros líderes. Sirve para ver si un género atrae a un público más joven o mayor.
+        * **Gráficos de dispersión (Scatterplots):** Permiten evaluar si existe alguna correlación o patrón oculto. Por ejemplo, ayuda a responder si a mayor edad disminuye o aumenta el tiempo de visualización según el tipo de contenido preferido.
+        """)
     else:
         st.warning("No se encontraron suficientes variables numéricas válidas para generar el Pairplot.")
 
